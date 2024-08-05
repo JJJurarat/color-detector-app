@@ -1,27 +1,57 @@
 import streamlit as st
-import cv2
 from PIL import Image
 import numpy as np
+from st_clickable_images import clickable_images
 
 # Function to extract RGB values
 def extract_rgb(image):
     # Convert image to numpy array
     image_array = np.array(image)
-    # Compute the average color of the image
+    # Compute the average color of the image (ignoring alpha channel if present)
+    if image_array.shape[2] == 4:  # Check if image has an alpha channel
+        image_array = image_array[:, :, :3]
     avg_color_per_row = np.average(image_array, axis=0)
     avg_color = np.average(avg_color_per_row, axis=0)
     return avg_color.astype(int)
 
+# Predefined colors and messages
+predefined_colors = {
+    "C7D7C9": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.1M",
+    "CED8CA": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.01M",
+    "C9D3C4": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.05M"
+}
+
+# Function to convert hex color code to RGB
+def hex_to_rgb(hex_code):
+    return np.array([int(hex_code[i:i+2], 16) for i in (0, 2, 4)])
+
+# Function to get the closest color message
+def get_color_message(detected_color, threshold=30):
+    # Find the closest predefined color
+    min_distance = float('inf')
+    closest_message = "ไม่พบปริมาณไอออนทองแดงในน้ำ"
+    for hex_code, message in predefined_colors.items():
+        color_rgb = hex_to_rgb(hex_code)
+        distance = np.linalg.norm(color_rgb - detected_color)
+        if distance < min_distance:
+            min_distance = distance
+            closest_message = message
+    # Check if the closest distance is within the threshold
+    if min_distance > threshold:
+        return "ไม่พบปริมาณไอออนทองแดงในน้ำ"
+    return closest_message
+
 # Streamlit app layout
-st.set_page_config(page_title="Color Detector", page_icon=":art:", layout="centered")
+st.set_page_config(page_title="Copper Detector", page_icon=":scientist:", layout="centered")
 
 st.markdown(
     """
     <style>
     .main {
-        background-color: #f3e5f5;  /* light purple background */
+        background-color:  #f0deff  ;  /* light purple background */
         color: #4a148c;  /* deep purple text */
         font-family: 'Arial', sans-serif;
+        
     }
     .stButton>button {
         background-color: #ba68c8;  /* medium purple button */
@@ -68,26 +98,44 @@ st.markdown(
 
 # Define the pages
 def home_page():
-    st.title("Color Detector")
-    st.markdown("## Capture an image and get the dominant color in RGB")
+    st.markdown("<h1 style='font-size: 30px;'>การตรวจจับอันตรายจากทองแดงที่ปนในน้ำ</h1>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("<p style='font-size: 18px;'>ทองแดงเป็นธาตุที่พบได้ทั่วไปในธรรมชาติ ซึ่งทองแดงจะละลายออกมาในสภาวะเป็นกรด ปัจจุบันมีการกระจายของทองแดงในน้ำมากมายเช่น การปล่อยน้ำทิ้งของโรงงานอุตสาหกรรม การเติมคอปเปอร์ซัลเฟต(CuSO4)ลงสู่แหล่งน้ำเพื่อควบคุมการเจริญเติบโตของสาหร่ายในอ่างเก็บน้ำ การใช้สารเคมีกำจัดศัตรูพืช ยากำจัดเชื้อราในดิน รวมถึงน้ำดื่ม ทั้งนี้อย่างไรก็ตามหากพบมีทองแดงละลายป่นอยู่ในปริมาณที่สูงหรือมากเกินความต้องการของร่างกายเป็นเวลานาน ทองแดงอาจก่อความเป็นพิษเรื้อรัง ทำให้ตับและไตทำงานผิดปกติ ไม่สามารถขับทองแดงออกได้ จนทำให้เกิดโรคที่เรียกว่า‘‘โรควิลสัน’มา</p>", unsafe_allow_html=True)
+    # for global use
+    if not hasattr(st, 'counters'):
+        st.counters = [0, 0]
+
+    clicked = clickable_images(
+        [
+                "https://assets-global.website-files.com/62305b652c19ea5fafa8152f/63e1e2b6e07cdbf3b9db5047_%E0%B8%94%E0%B8%B5%E0%B9%84%E0%B8%8B%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%20(80).jpg?w=700",
+                "https://assets-global.website-files.com/62305b652c19ea5fafa8152f/63e1e2ae2b23e2e793cbbb69_%E0%B8%94%E0%B8%B5%E0%B9%84%E0%B8%8B%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%20(78).jpg?w=700",
+        ],
+        titles=[f"Image #{str(i)}" for i in range(2)],
+        div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
+        img_style={"margin": "5px", "height": "200px"},
+    )
+
+    st.markdown("---")
+    st.markdown("<h2 style='font-size: 20px;'>สามารถถ่ายภาพหรืออัพโหลดผลการทดสอบที่ได้</h2>", unsafe_allow_html=True)
     st.markdown("---")
 
     # Option to capture an image using the camera
-    st.markdown("### Capture an image using the camera")
-    uploaded_file_camera = st.camera_input("Take a picture")
+    st.markdown("### ถ่ายภาพผลสีที่ได้ผ่านโทรศัพท์")
+    
+    uploaded_file_camera = st.camera_input("ถ่ายภาพ")
 
     # Option to upload an image from device
-    st.markdown("### Or upload an image from your device")
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    st.markdown("### อัพโหลดรูปภาพผลที่ได้")
+    uploaded_file = st.file_uploader("เลือกรูป...", type=["jpg", "jpeg", "png"])
 
     # Add a button to confirm the upload and change the page
     if uploaded_file_camera or uploaded_file:
-        if st.button("Process Image"):
+        if st.button("ดูผลลัพธ์ที่ได้"):
             st.session_state.uploaded_file = uploaded_file_camera or uploaded_file
             st.session_state.page = "result"
 
 def result_page():
-    st.title("Color Detector Results")
+    st.markdown("<h1 style='font-size: 26px;'>ผลลัพธ์ที่ได้จากการตรวจจับสีเพื่อทราบปริมาณทองแดง</h1>", unsafe_allow_html=True)
     st.markdown("---")
 
     uploaded_file = st.session_state.uploaded_file
@@ -96,7 +144,7 @@ def result_page():
         image = Image.open(uploaded_file)
 
         # Display the image
-        st.image(image, caption='Uploaded Image', use_column_width=True)
+        st.image(image, caption='ภาพที่ประมวลผล', use_column_width=True)
 
         # Extract and display the RGB values
         rgb_values = extract_rgb(image)
@@ -108,7 +156,11 @@ def result_page():
             unsafe_allow_html=True,
         )
 
-    if st.button("Back to Home"):
+        # Display the closest predefined color message
+        message = get_color_message(rgb_values)
+        st.markdown(f"<p style='font-size: 20px; color: #4a148c;'>{message}</p>", unsafe_allow_html=True)
+
+    if st.button("กลับไปยังหน้าแรก"):
         st.session_state.page = "home"
 
 # Initialize session state
