@@ -20,11 +20,10 @@ jsonschema-specifications==2023.12.1
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
-numpy==2.0.1
-opencv-python==4.10.0.84
+
 packaging==24.1
 pandas==2.2.2
-pillow==10.4.0
+
 protobuf==5.27.3
 pyarrow==17.0.0
 pydeck==0.9.1
@@ -37,7 +36,7 @@ rich==13.7.1
 rpds-py==0.19.1
 six==1.16.0
 smmap==5.0.1
-streamlit==1.37.0
+
 tenacity==8.5.0
 toml==0.10.2
 toolz==0.12.1
