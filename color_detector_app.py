@@ -18,7 +18,9 @@ def extract_rgb(image):
 predefined_colors = {
     "C7D7C9": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.1M",
     "CED8CA": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.01M",
-    "C9D3C4": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.05M"
+    "C9D3C4": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.05M",
+    "B2BBA0": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.005M",
+    "B0B496": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.001M"
 }
 
 # Function to convert hex color code to RGB
@@ -100,7 +102,8 @@ st.markdown(
 def home_page():
     st.markdown("<h1 style='font-size: 30px;'>การตรวจจับอันตรายจากทองแดงที่ปนในน้ำ</h1>", unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("<p style='font-size: 18px;'>ทองแดงเป็นธาตุที่พบได้ทั่วไปในธรรมชาติ ซึ่งทองแดงจะละลายออกมาในสภาวะเป็นกรด ปัจจุบันมีการกระจายของทองแดงในน้ำมากมายเช่น การปล่อยน้ำทิ้งของโรงงานอุตสาหกรรม การเติมคอปเปอร์ซัลเฟต(CuSO4)ลงสู่แหล่งน้ำเพื่อควบคุมการเจริญเติบโตของสาหร่ายในอ่างเก็บน้ำ การใช้สารเคมีกำจัดศัตรูพืช ยากำจัดเชื้อราในดิน รวมถึงน้ำดื่ม ทั้งนี้อย่างไรก็ตามหากพบมีทองแดงละลายป่นอยู่ในปริมาณที่สูงหรือมากเกินความต้องการของร่างกายเป็นเวลานาน ทองแดงอาจก่อความเป็นพิษเรื้อรัง ทำให้ตับและไตทำงานผิดปกติ ไม่สามารถขับทองแดงออกได้ จนทำให้เกิดโรคที่เรียกว่า‘‘โรควิลสัน’มา</p>", unsafe_allow_html=True)
+    with st.expander("อันตรายจากทองแดงที่ปนอยู่ในน้ำ"):
+        st.markdown("<p style='font-size: 18px;'>ทองแดงเป็นธาตุที่พบได้ทั่วไปในธรรมชาติ ซึ่งทองแดงจะละลายออกมาในสภาวะเป็นกรด ปัจจุบันมีการกระจายของทองแดงในน้ำมากมายเช่น การปล่อยน้ำทิ้งของโรงงานอุตสาหกรรม การเติมคอปเปอร์ซัลเฟต(CuSO4)ลงสู่แหล่งน้ำเพื่อควบคุมการเจริญเติบโตของสาหร่ายในอ่างเก็บน้ำ การใช้สารเคมีกำจัดศัตรูพืช ยากำจัดเชื้อราในดิน รวมถึงน้ำดื่ม ทั้งนี้อย่างไรก็ตามหากพบมีทองแดงละลายป่นอยู่ในปริมาณที่สูงหรือมากเกินความต้องการของร่างกายเป็นเวลานาน ทองแดงอาจก่อความเป็นพิษเรื้อรัง ทำให้ตับและไตทำงานผิดปกติ ไม่สามารถขับทองแดงออกได้ จนทำให้เกิดโรคที่เรียกว่า‘‘โรควิลสัน’มา</p>", unsafe_allow_html=True)
     # for global use
     if not hasattr(st, 'counters'):
         st.counters = [0, 0]
@@ -114,6 +117,18 @@ def home_page():
         div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
         img_style={"margin": "5px", "height": "200px"},
     )
+
+
+    with st.expander("วิธีการใช้กระดาษกรองเพื่อตรวจปริมาณทองแดงที่อยู่ในน้ำ"):
+        st.markdown("""
+    <ol style='font-size: 20px;'>
+        <li>เตรียมกระดาษกรองที่อิ่มตัวจากสารสกัดแก้วมังกรและสารละลายบับเฟอร์ pH 7</li>
+        <li>นำสารละลายตัวอย่าง ปริมาณ 1 หยด มาหยดลงบนกระดาษกรองที่อิ่มตัวจากสารสกัดแก้วมังกรและสารละลายบับเฟอร์ pH 7</li>
+        <li>สังเกตการเปลี่ยนแปลงของสีเมื่อเวลาผ่านไป 1 นาที</li>
+        <li>นำกระดาษกรองไปสแกนเข้าเว็บ <a href="https://copper-volum-by-color-detector.streamlit.app/" target="_blank">https://copper-volum-by-color-detector.streamlit.app/</a> เพื่อหาความเข้มข้นของคอปเปอร์ในสารละลายตัวอย่าง</li>
+    </ol>
+    """, unsafe_allow_html=True)
+
 
     st.markdown("---")
     st.markdown("<h2 style='font-size: 20px;'>สามารถถ่ายภาพหรืออัพโหลดผลการทดสอบที่ได้</h2>", unsafe_allow_html=True)
@@ -152,23 +167,49 @@ def result_page():
 
         # Display the color
         st.markdown(
-            f"<div class='color-box' style='background-color:rgb({rgb_values[0]},{rgb_values[1]},{rgb_values[2]});'></div>",
+            f"<div class='color-box' style='background-color: rgb({rgb_values[0]}, {rgb_values[1]}, {rgb_values[2]});'></div>",
             unsafe_allow_html=True,
         )
 
-        # Display the closest predefined color message
+        # Display the closest color message
         message = get_color_message(rgb_values)
-        st.markdown(f"<p style='font-size: 20px; color: #4a148c;'>{message}</p>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='font-size: 24px; text-align: center;'>{message}</h2>", unsafe_allow_html=True)
 
-    if st.button("กลับไปยังหน้าแรก"):
+
+         # If the color is predefined, show the warning message
+        if message in predefined_colors.values():
+            st.markdown(
+                """
+                <style>
+                .danger-text {
+                    color: red;
+                    font-size: 20px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            st.markdown("<p class='danger-text'>อันตรายมาก!!</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>เนื่องจากเกณฑ์กำหนดของการพบทองแดงในน้ำ</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำบริโภค 1 mg/L</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำบาดาลที่ใช้บริโภคได้ 1.5mg/L</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำประปาที่บริโภคได้ mg/L</p>", unsafe_allow_html=True)
+
+
+        st.markdown("---")
+    if st.button("ถ่ายภาพใหม่หรืออัพโหลดรูปใหม่"):
         st.session_state.page = "home"
 
 # Initialize session state
 if 'page' not in st.session_state:
     st.session_state.page = "home"
+if 'uploaded_file' not in st.session_state:
+    st.session_state.uploaded_file = None
 
-# Render the appropriate page
+# Display pages based on the state
 if st.session_state.page == "home":
     home_page()
-else:
+elif st.session_state.page == "result":
     result_page()
