@@ -20,7 +20,8 @@ predefined_colors = {
     "CED8CA": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.01M",
     "C9D3C4": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.05M",
     "B2BBA0": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.005M",
-    "B0B496": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.001M"
+    "B0B496": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.001M",
+    "CCCAB9": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.00001M"
 }
 
 # Function to convert hex color code to RGB
@@ -193,9 +194,8 @@ def result_page():
             )
             st.markdown("<p class='danger-text'>อันตรายมาก!!</p>", unsafe_allow_html=True)
             st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>เนื่องจากเกณฑ์กำหนดของการพบทองแดงในน้ำ</p>", unsafe_allow_html=True)
-            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำบริโภค 1 mg/L</p>", unsafe_allow_html=True)
-            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำบาดาลที่ใช้บริโภคได้ 1.5mg/L</p>", unsafe_allow_html=True)
-            st.markdown("<p style='font-size: 18px; color: #4a148c; text-align: center;'>ในน้ำประปาที่บริโภคได้ mg/L</p>", unsafe_allow_html=True)
+            message = get_color_message(rgb_values)
+            st.markdown(f"<p style='font-size: 18px; color: #4a148c; text-align: center;'>{message}</h2>", unsafe_allow_html=True)
 
 
         st.markdown("---")
