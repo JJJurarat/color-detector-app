@@ -20,8 +20,7 @@ predefined_colors = {
     "CED8CA": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.01M",
     "C9D3C4": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.05M",
     "B2BBA0": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.005M",
-    "B0B496": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.001M",
-    "CCCAB9": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.00001M"
+    "B0B496": "ปริมาณไอออนทองแดงในน้ำ มีความเข้มข้น 0.001M"
 }
 
 # Function to convert hex color code to RGB
@@ -32,7 +31,7 @@ def hex_to_rgb(hex_code):
 def get_color_message(detected_color, threshold=30):
     # Find the closest predefined color
     min_distance = float('inf')
-    closest_message = "ไม่พบปริมาณไอออนทองแดงในน้ำ"
+    closest_message = "ไม่สามารถตรวจสอบได้เนื่องจากมีความเข้มข้นของไอออนทองแดงน้อย"
     for hex_code, message in predefined_colors.items():
         color_rgb = hex_to_rgb(hex_code)
         distance = np.linalg.norm(color_rgb - detected_color)
@@ -41,7 +40,7 @@ def get_color_message(detected_color, threshold=30):
             closest_message = message
     # Check if the closest distance is within the threshold
     if min_distance > threshold:
-        return "ไม่พบปริมาณไอออนทองแดงในน้ำ"
+        return "ไม่สามารถตรวจสอบได้เนื่องจากมีความเข้มข้นของไอออนทองแดงน้อย"
     return closest_message
 
 # Streamlit app layout
